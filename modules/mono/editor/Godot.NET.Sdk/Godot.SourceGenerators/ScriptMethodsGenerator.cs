@@ -361,7 +361,7 @@ namespace Godot.SourceGenerators
                 if (i != 0)
                     source.Append(", ");
 
-                source.AppendVariantToManagedExpr(string.Concat("args[", i.ToString(), "]"),
+                source.AppendNativeVariantToManagedExpr(string.Concat("args[", i.ToString(), "]"),
                     method.ParamTypeSymbols[i], method.ParamTypes[i]);
             }
 
@@ -371,7 +371,7 @@ namespace Godot.SourceGenerators
             {
                 source.Append("            ret = ");
 
-                source.AppendManagedToVariantExpr("callRet", method.RetType.Value);
+                source.AppendManagedToNativeVariantExpr("callRet", method.RetType.Value);
                 source.Append(";\n");
 
                 source.Append("            return true;\n");
