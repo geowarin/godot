@@ -46,7 +46,7 @@ def configure(env, env_mono):
 
     dotnet_cmd = os.path.join(dotnet_root, "dotnet.exe" if os.name == "nt" else "dotnet")
 
-    runtime_identifier = determine_runtime_identifier(env)
+    runtime_identifier = determine_runtime_identifier(dotnet_cmd)
 
     # TODO: In the future, if it can't be found this way, we want to obtain it
     # from the runtime.{runtime_identifier}.Microsoft.NETCore.DotNetAppHost NuGet package.
@@ -110,24 +110,28 @@ def configure(env, env_mono):
                 env.Append(LINKFLAGS=["-Wl,-whole-archive", libnethost_path, "-Wl,-no-whole-archive"])
 
 
-def determine_runtime_identifier(env):
-    names_map = {
-        "windows": "win",
-        "macos": "osx",
-        "linuxbsd": "linux",
-        "server": "linux",  # FIXME: Is server linux only, or also macos?
-    }
+def determine_runtime_identifier(dotnet_cmd):
+    import subprocess
 
-    # architectures names: x86, x64, arm, or arm64
+    try:
+        env = dict(os.environ, DOTNET_CLI_UI_LANGUAGE="en-US")
+        lines = subprocess.check_output([dotnet_cmd, "--info"], env=env).splitlines()
 
-    platform = env["platform"]
+        for line_bytes in lines:
+            line = line_bytes.decode("utf-8").strip()
+            if not line.startswith("RID"):
+                continue
 
-    if is_desktop(platform):
-        bits = env["bits"]
-        bit_arch_map = {"64": "x64", "32": "x86"}
-        return "%s-%s" % (names_map[platform], bit_arch_map[bits])
-    else:
-        raise NotImplementedError()
+            parts = line.split(":", 2)
+            if len(parts) == 2:
+                return parts[1].strip()
+
+        raise RuntimeError("Could not find local dotnet RID")
+
+    except (subprocess.CalledProcessError, OSError) as e:
+        import sys
+
+        print(e, file=sys.stderr)
 
 
 def find_app_host_version(dotnet_cmd, search_version_str):
