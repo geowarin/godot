@@ -158,7 +158,9 @@ gcov.css
 gmon.out
 
 # Jetbrains IDEs
-.idea/
+!/.idea
+.idea/*
+!/.idea/tools
 .fleet/
 
 # Kate

@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Godot Debug" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--editor --path $USER_HOME$/godot-test/test-gridmap/" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="godot" TARGET_NAME="Godot debug" CONFIG_NAME="Godot debug" RUN_PATH="$PROJECT_DIR$/bin/godot.linuxbsd.editor.dev.x86_64">
+    <method v="2">
+      <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+    </method>
+  </configuration>
+</component>
